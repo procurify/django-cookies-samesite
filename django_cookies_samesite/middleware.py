@@ -31,12 +31,13 @@ class CookiesSameSite(MiddlewareMixin):
     This middleware will be obsolete when your app will start using Django 2.1.
     """
     def process_response(self, request, response):
-        # same-site = None introduced for Chrome 80 breaks for Chrome 51-66
+        # same-site = None introduced for Chrome 80 breaks for Chrome 51-66 & Safari in Mac OS X 10.14
         # Refer (https://www.chromium.org/updates/same-site/incompatible-clients)
         http_user_agent = request.META.get('HTTP_USER_AGENT') or " "
         if re.search(CHROME_VALIDATE_REGEX, http_user_agent):
             return response
-
+        if ('Mac OS X 10_14' in http_user_agent) and ('Safari' in http_user_agent):
+            return response
         if LooseVersion(django.__version__) >= LooseVersion('2.1.0'):
             raise DeprecationWarning(
                 'Your version of Django supports SameSite flag in the cookies mechanism. '
