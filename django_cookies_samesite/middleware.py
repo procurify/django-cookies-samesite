@@ -36,7 +36,7 @@ class CookiesSameSite(MiddlewareMixin):
         http_user_agent = request.META.get('HTTP_USER_AGENT') or " "
         if re.search(CHROME_VALIDATE_REGEX, http_user_agent):
             return response
-        if ('Mac OS X 10_14' in http_user_agent) and ('Safari' in http_user_agent):
+        if ('Mac OS X 10_14' in http_user_agent) and ('Safari' in http_user_agent) and ('Version/' in http_user_agent):
             return response
         if LooseVersion(django.__version__) >= LooseVersion('2.1.0'):
             raise DeprecationWarning(
